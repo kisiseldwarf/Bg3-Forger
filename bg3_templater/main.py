@@ -1,5 +1,8 @@
 import click
 import os
+import chevron
+
+template_dir = 'templates'
 
 @click.group()
 def cli():
@@ -10,10 +13,6 @@ def find(arr, el):
         return arr.index(el)
     except ValueError:
         return -1
-
-@cli.command()
-def build():
-    print("hello")
 
 @cli.command()
 @click.argument("name")
@@ -31,12 +30,26 @@ def new(name, lang):
     os.mkdir("{name}/Mods".format(name = name))
     os.mkdir("{name}/Mods/{name}".format(name = name))
 
+
+    uuid = "123456789"
+
+    with open('{template_dir}/meta.mustache'.format(template_dir = template_dir), 'r') as f:
+        compiled_text = chevron.render(f, {
+            "author_name": "kisis",
+            "mod_description": "My super mod",
+            "mod_folder": "???",
+            "mod_name": name,
+            "mod_id": uuid
+        })
+        targetFile = open("{name}/Mods/{name}/meta.lsx".format(name = name), "x")
+        targetFile.write(compiled_text)
+        targetFile.close()
+
     if(find(lang, 'en') != -1):
         open("{name}/Localization/English/{name}.xml".format(name = name), "x")
     if(find(lang, 'fr') != -1):
         open("{name}/Localization/French/{name}.xml".format(name = name), "x")
     open("{name}/Public/{name}/[PAK]_{name}".format(name = name), "x")
-    open("{name}/Mods/{name}/meta.lsx".format(name = name), "x")
 
 if __name__ == '__main__':
     cli()
