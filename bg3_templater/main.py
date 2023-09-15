@@ -1,5 +1,6 @@
 import click
 import os
+import uuid
 import chevron
 
 template_dir = 'templates'
@@ -31,15 +32,13 @@ def new(name, lang):
     os.mkdir("{name}/Mods/{name}".format(name = name))
 
 
-    uuid = "123456789"
-
     with open('{template_dir}/meta.mustache'.format(template_dir = template_dir), 'r') as f:
         compiled_text = chevron.render(f, {
             "author_name": "kisis",
             "mod_description": "My super mod",
             "mod_folder": "???",
             "mod_name": name,
-            "mod_id": uuid
+            "mod_id": uuid.uuid4()
         })
         targetFile = open("{name}/Mods/{name}/meta.lsx".format(name = name), "x")
         targetFile.write(compiled_text)
