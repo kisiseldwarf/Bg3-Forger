@@ -18,7 +18,9 @@ def find(arr, el):
 @cli.command()
 @click.argument("name")
 @click.option("-l", "--lang", type = click.Choice(['en', 'fr'], case_sensitive=False), multiple=True, default = ["en"], help = "Languages to include in Localization")
-def new(name, lang):
+@click.option("-d", "--description", type=str, help="The mod description", default="An awesome mod made with IronGauntletForger")
+@click.option("-a", "--author", type=str, help="The mod author", default="Anonymous")
+def new(name, lang, description, author):
     os.mkdir(name)
     os.mkdir("{name}/Generated".format(name = name))
     os.mkdir("{name}/Public".format(name = name))
@@ -31,11 +33,10 @@ def new(name, lang):
     os.mkdir("{name}/Mods".format(name = name))
     os.mkdir("{name}/Mods/{name}".format(name = name))
 
-
     with open('{template_dir}/meta.mustache'.format(template_dir = template_dir), 'r') as f:
         compiled_text = chevron.render(f, {
-            "author_name": "kisis",
-            "mod_description": "My super mod",
+            "author_name": author,
+            "mod_description": description,
             "mod_folder": "???",
             "mod_name": name,
             "mod_id": uuid.uuid4()
