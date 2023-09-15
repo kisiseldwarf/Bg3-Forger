@@ -15,13 +15,21 @@ def find(arr, el):
     except ValueError:
         return -1
 
+def handleFileExistsError():
+    print("Error ! The folder already exists :(")
+    quit()
+
 @cli.command()
 @click.argument("name")
 @click.option("-l", "--lang", type = click.Choice(['en', 'fr'], case_sensitive=False), multiple=True, default = ["en"], help = "Languages to include in Localization")
 @click.option("-d", "--description", type=str, help="The mod description", default="An awesome mod made with IronGauntletForger")
 @click.option("-a", "--author", type=str, help="The mod author", default="Anonymous")
 def new(name, lang, description, author):
-    os.mkdir(name)
+    try:
+        os.mkdir(name)
+    except FileExistsError:
+        handleFileExistsError()
+    
     os.mkdir("{name}/Generated".format(name = name))
     os.mkdir("{name}/Public".format(name = name))
     os.mkdir("{name}/Public/{name}".format(name = name))
