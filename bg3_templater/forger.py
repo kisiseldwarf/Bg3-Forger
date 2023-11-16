@@ -2,8 +2,24 @@ import click
 import os
 import uuid
 import chevron
+import ctypes
+import platform
+import yaml
+root_dir = "bg3_templater"
 
-template_dir = 'templates'
+def check_platform():
+    if platform.uname()[0] == "Linux" or platform.uname()[0] == "Darwin":
+        print("Linux and MacOS currently aren't supported :(")
+        exit()
+
+def init(config):
+    lslib = ctypes.windll.LoadLibrary(config.lslib)
+    template_dir = config.template_dir
+
+with open('%s/config.yaml' % root_dir, 'r') as file:
+    check_platform()
+    config = yaml.safe_load(file)
+    init(config)
 
 @click.group()
 def cli():
@@ -14,6 +30,9 @@ def find(arr, el):
         return arr.index(el)
     except ValueError:
         return -1
+
+def readLsLib():
+    lslib.Divine.Cli.Create()
 
 def handleFileExistsError():
     print("Error ! The folder already exists :(")

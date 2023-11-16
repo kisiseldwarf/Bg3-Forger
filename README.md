@@ -7,7 +7,7 @@ Simply launch
 poetry install
 ```
 ```bash 
-poetry run python bg3_templater/main.py
+poetry run python bg3_templater/forger.py
 ```
 
 v0.1.0:
